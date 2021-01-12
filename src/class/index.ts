@@ -139,3 +139,110 @@ export class WeakMapStack<T> {
         items.set(this, []);
     }
 }
+
+/**
+ * 队列
+ */
+export class Queue<T> {
+    count: number;
+    lowestCount: number;
+    items: any;
+    constructor() {
+        this.count = 0;
+        this.lowestCount = 0;
+        this.items = {};
+    }
+    enqueue(...elements: T[]): void {
+        elements.forEach((element: T) => {
+            this.items[this.count++] = element;
+        });
+    }
+    dequeue(): T | undefined {
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        const first = this.items[this.lowestCount];
+        delete this.items[this.lowestCount++];
+        return first;
+    }
+    peek() {
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        return this.items[this.lowestCount];
+    }
+    isEmpty(): boolean {
+        return Object.is(this.size(), 0);
+    }
+    size(): number {
+        return this.count - this.lowestCount;
+    }
+    clear(): void {
+        this.count = 0;
+        this.lowestCount = 0;
+        this.items = {};
+    }
+    toString(): string {
+        if (this.isEmpty()) {
+            return '';
+        }
+        let objString = `${this.items[this.lowestCount]}`;
+        for (let i = this.lowestCount + 1; i < this.count; i++) {
+            objString = `${objString},${this.items[i]}`;
+        }
+        return objString;
+    }
+}
+
+/**
+ * 双端队列
+ */
+export class DoubleQueue<T> {
+    count: number;
+    lowestCount: number;
+    items: any;
+    constructor() {
+        this.count = 0;
+        this.lowestCount = 0;
+        this.items = {};
+    }
+    addFront(...elements: T[]) {
+
+    }
+    addBack(...elements: T[]) {
+
+    }
+    removeFront() {
+
+    }
+    removeBack() {
+
+    }
+    peekFront() {
+
+    }
+    peekBack() {
+
+    }
+    isEmpty() {
+        return Object.is(this.size(), 0);
+    }
+    size() {
+        return this.count - this.lowestCount;
+    }
+    clear() {
+        this.count = 0;
+        this.lowestCount = 0;
+        this.items = {};
+    }
+    toString(): string {
+        if (this.isEmpty()) {
+            return '';
+        }
+        let objString = `${this.items[this.lowestCount]}`;
+        for (let i = this.lowestCount + 1; i < this.count; i++) {
+            objString = `${objString},${this.items[i]}`;
+        }
+        return objString;
+    }
+}

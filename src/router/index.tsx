@@ -9,10 +9,12 @@ import { RouterItem, MetaItem } from '../class';
 import { RouteItem } from '../interface';
 import Arr from "../views/arr";
 import Stacks from "../views/stack";
+import Queues from "../views/queue";
 
 export const routes: RouteItem[] = [
     new RouterItem('/', Arr, new MetaItem('数组')),
     new RouterItem('/stack', Stacks, new MetaItem('栈')),
+    new RouterItem('/queue', Queues, new MetaItem('队列')),
 ];
 
 export default function Routers() {
