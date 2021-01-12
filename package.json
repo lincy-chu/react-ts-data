@@ -1,6 +1,6 @@
 {
-  "name": "react-ts",
-  "version": "0.1.0",
+  "name": "react-ts-data",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -40,7 +40,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "yarn_install": "yarn install",
     "lint": "react-scripts lint"
   },
   "eslintConfig": {

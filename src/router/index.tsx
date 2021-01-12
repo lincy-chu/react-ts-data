@@ -7,10 +7,12 @@ import {
 import { createBrowserHistory } from 'history';
 import { RouterItem, MetaItem } from '../class';
 import { RouteItem } from '../interface';
-import Base from "../views/base";
+import Arr from "../views/arr";
+import Stacks from "../views/stack";
 
 export const routes: RouteItem[] = [
-    new RouterItem('/', Base, new MetaItem('数据结构与算法基础')),
+    new RouterItem('/', Arr, new MetaItem('数组')),
+    new RouterItem('/stack', Stacks, new MetaItem('栈')),
 ];
 
 export default function Routers() {

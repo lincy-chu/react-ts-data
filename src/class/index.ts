@@ -25,3 +25,117 @@ export class MetaItem implements Meta {
         this.title = title;
     }
 }
+
+/**
+ * 栈
+ */
+export class Stack<T> {
+    items: T[];
+    constructor() {
+        this.items = [];
+    }
+    push(...elements: T[]): void {
+        this.items = this.items.concat(elements);
+    }
+    pop(): T | undefined {
+        return this.items.pop();
+    }
+    peek(): T | undefined { // 栈顶元素
+        return this.items[this.items.length - 1];
+    }
+    isEmpty(): boolean {
+        return Object.is(this.size(), 0);
+    }
+    size(): number {
+        return this.items.length;
+    }
+    clear(): void {
+        this.items = [];
+    }
+}
+
+/**
+ * 对象栈
+ */
+export class ObjStack {
+    count: number;
+    items: any;
+    constructor() {
+        this.count = 0;
+        this.items = {};
+    }
+    push(...elements: any[]): void {
+        elements.forEach((element: any) => {
+            this.items[this.count++] = element;
+        });
+    }
+    pop(): any {
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        const result = this.items[--this.count];
+        delete this.items[this.count];
+        return result
+    }
+    peek(): any {
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        return this.items[this.count - 1];
+    }
+    isEmpty(): boolean {
+        return Object.is(this.size(), 0);
+    }
+    size(): number {
+        return this.count;
+    }
+    clear(): void {
+        this.count = 0;
+        this.items = {};
+    }
+    toString(): string {
+        if (this.isEmpty()) {
+            return '';
+        }
+        let objStr = `${this.items[0]}`;
+        for (let i = 1; i < this.count; i++) {
+            objStr = `${objStr}, ${this.items[i]}`;
+        }
+        return objStr;
+    }
+}
+
+/**
+ * 基于WeakMap的栈
+ * 从WeakMap中取出值，即以this为键从items中取值
+ * items在类中是真正的私有属性。采用这种方法，代码可读性不强，在扩展类时无法继承私有属性。
+ */
+const items = new WeakMap();
+export class WeakMapStack<T> {
+    constructor() {
+        items.set(this, []);
+    }
+    push(...elements: T[]): void {
+        const s = items.get(this);
+        s.push(...elements);
+    }
+    pop(): T | undefined {
+        return items.get(this).pop();
+    }
+    peek(): T | undefined {
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        const arr = items.get(this);
+        return arr[arr.length - 1];
+    }
+    isEmpty(): boolean {
+        return Object.is(this.size(), 0);
+    }
+    size(): number {
+        return items.get(this).length;
+    }
+    clear(): void {
+        items.set(this, []);
+    }
+}
