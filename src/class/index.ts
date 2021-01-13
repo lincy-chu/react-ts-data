@@ -485,6 +485,9 @@ export class LinkedList<T> {
             return false;
         }
     }
+    getHead(): Node<T> | null {
+        return this.head;
+    }
     // 是否为空
     isEmpty(): boolean {
         return Object.is(this.size(), 0);
@@ -494,7 +497,54 @@ export class LinkedList<T> {
         return this.length;
     }
     // 转为字符串
-    toString() {
+    toString(): string {
+        if (this.head === null) {
+            return '';
+        }
+        let objString = `${this.head.element}`;
+        let current = this.head.next;
+        for (let i = 1; i < this.size() && current !== null; i++) {
+            objString = `${objString},${current.element}`;
+            current = current.next;
+        }
+        return objString;
+    }
+}
 
+/**
+ * 双向链表
+ */
+/**
+ * 链表节点
+ */
+export class DoubleNode<T> {
+    element: T;
+    prev: DoubleNode<T> | null;
+    next: DoubleNode<T> | null;
+    constructor(element: T) {
+        this.element = element;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+/**
+ * 双向链表
+ */
+export class DoubleLinkedList<T> {
+    head: DoubleNode<T> | null;
+    tail: DoubleNode<T> | null;
+    length: number;
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.length = 0;
+    }
+    // 任意位置插入元素
+    insert(position: number, element: T): boolean {
+        if(position >= 0 && position <= this.length) {
+
+        }
+        return false;
     }
 }

@@ -13,6 +13,7 @@ const LinkedLists = () => {
             Log(linkedList);
             linkedList.remove(2);
             Log(linkedList);
+            Log(linkedList.toString());
         });
     }, []);
     return (
