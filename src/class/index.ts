@@ -1,8 +1,5 @@
-import { Component, FC } from "react";
-import {
-    RouteItem,
-    Meta,
-} from "../interface";
+import {Component, FC} from "react";
+import {Meta, RouteItem,} from "../interface";
 
 export class RouterItem implements RouteItem {
     component: Component | FC;
@@ -376,5 +373,128 @@ export class LoopQueue<T> {
     }
     clear(): void {
         this.items = [];
+    }
+}
+
+/**
+ * 链表
+ */
+/**
+ * 链表节点
+ */
+class Node<T> {
+    element: T;
+    next: Node<T> | null;
+    constructor(element: T) {
+        this.element = element;
+        this.next = null;
+    }
+}
+export class LinkedList<T> {
+    head: Node<T> | null;
+    length: number;
+    constructor() {
+        this.head = null;
+        this.length = 0;
+    }
+    // 追加元素
+    append(...elements: T[]): void {
+       elements.forEach((element: T) => {
+           const node = new Node<T>(element);
+           if (this.head === null) {
+               this.head = node;
+           } else {
+               let current = this.head;
+               while (current.next) {
+                   current = current.next;
+               }
+               current.next = node;
+           }
+           this.length++;
+       });
+    }
+    // 任意位置插入元素
+    insert(position: number, element: T): boolean {
+        if (position >= 0 && position <= this.length) { // 溢出检查
+            const node = new Node<T>(element);
+            if (position === 0) {
+                if (this.head) {
+                    node.next = this.head;
+                    this.head = node;
+                } else {
+                    this.head = node;
+                }
+            } else {
+                let current = this.head;
+                let prev = null;
+                let index = 0;
+
+                while (index++ < position) {
+                    prev = current;
+                    current && (current = current?.next);
+                }
+
+                node.next = current;
+                prev && (prev.next = node);
+            }
+            this.length++;
+            return true;
+        }
+        return false;
+    }
+    // 移除指定位置的元素
+    removeAt(position: number): boolean {
+        if (position >= 0 && position < this.length) {
+            let index = 0;
+            let prev = null;
+            let current = this.head;
+
+            if (position === 0) {
+                this.head = current ? current.next: null;
+            } else {
+                while (index++ < position) {
+                    prev = current;
+                    current = current ? current.next : null;
+                }
+                prev && (prev.next = current ? current.next: null);
+            }
+
+            this.length--;
+            return true;
+        }
+        return false;
+    }
+    // 移除指定元素
+    remove(element: T): boolean {
+        if (this.head) {
+            let current = this.head;
+            let prev = null;
+            let find = false;
+
+            while (current.next && !find) {
+                prev = current;
+                current = current.next;
+                find = current.element === element;
+            }
+            if (find) {
+                prev && (prev.next = current ? current.next: null);
+                this.length--;
+            }
+            return find;
+        } else {
+            return false;
+        }
+    }
+    // 是否为空
+    isEmpty(): boolean {
+        return Object.is(this.size(), 0);
+    }
+    // 元素数量
+    size(): number {
+        return this.length;
+    }
+    // 转为字符串
+    toString() {
+
     }
 }
