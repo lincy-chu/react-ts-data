@@ -206,23 +206,54 @@ export class DoubleQueue<T> {
         this.lowestCount = 0;
         this.items = {};
     }
-    addFront(...elements: T[]) {
-
+    addFront(...elements: T[]): void {
+        elements.forEach((element: T) => {
+            if (this.isEmpty()) {
+                this.addBack(element);
+            } else if (this.lowestCount > 0) {
+                this.items[--this.lowestCount] = element;
+            } else {
+                for (let i = this.count; i > 0; i--) {
+                    this.items[i] = this.items[i - 1];
+                }
+                this.count++;
+                this.lowestCount = 0;
+                this.items[0] = element;
+            }
+        });
     }
-    addBack(...elements: T[]) {
-
+    addBack(...elements: T[]): void {
+        elements.forEach((element: T) => {
+            this.items[this.count++] = element;
+        });
     }
-    removeFront() {
-
+    removeFront(): T | undefined {
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        const first = this.items[this.lowestCount];
+        delete this.items[this.lowestCount++];
+        return first;
     }
     removeBack() {
-
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        const last = this.items[this.count - 1];
+        delete this.items[this.count--];
+        return last;
     }
     peekFront() {
-
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        return this.items[this.lowestCount];
     }
     peekBack() {
-
+        if (this.isEmpty()) {
+            return undefined;
+        }
+        return this.items[this.count - 1];
     }
     isEmpty() {
         return Object.is(this.size(), 0);
@@ -244,5 +275,106 @@ export class DoubleQueue<T> {
             objString = `${objString},${this.items[i]}`;
         }
         return objString;
+    }
+}
+
+/**
+ * 优先队列
+ */
+/**
+ * 优先队列子项
+ */
+class PriorityElement<T> {
+    element: T;
+    priority: number;
+    constructor(element: T, priority: number) {
+        this.element = element;
+        this.priority = priority;
+    }
+}
+
+/**
+ * 优先队列
+ */
+export class PriorityQueue<T> {
+    items: PriorityElement<T>[];
+    constructor() {
+        this.items = [];
+    }
+    enqueue(element: T, priority: number) {
+        const queueElement = new PriorityElement(element, priority);
+        if (this.isEmpty()) {
+            this.items.push(queueElement);
+        } else {
+            const prevIndex = this.items.findIndex((item: PriorityElement<T>): boolean => queueElement.priority < item.priority);
+            if (prevIndex > -1) {
+                this.items.splice(prevIndex, 0, queueElement);
+            } else {
+                this.items.push(queueElement);
+            }
+        }
+    }
+    dequeue() {
+        return this.items.shift();
+    }
+    front() {
+        return this.items[0];
+    }
+    isEmpty():boolean {
+        return Object.is(this.size(), 0);
+    }
+    size():number {
+        return this.items.length;
+    }
+    clear() {
+        this.items = [];
+    }
+    toString(): string {
+        if (this.isEmpty()) {
+            return '';
+        }
+        let objString = `${this.items[0].element} -> ${this.items[0].priority}`;
+        const length = this.items.length;
+        if (length >= 2) {
+            for (let i = 1; i < length; i++) {
+                objString = `${objString},${this.items[i].element} -> ${this.items[i].priority}`;
+            }
+        }
+        return objString;
+    }
+}
+
+/**
+ * 循环队列
+ */
+export class LoopQueue<T> {
+    items: T[];
+    constructor() {
+        this.items = [];
+    }
+    enqueue(...elements: T[]) {
+        this.items = this.items.concat(elements);
+    }
+    dequeue(): T | undefined {
+        return this.items.shift();
+    }
+    front(): T | undefined {
+        return this.items[0];
+    }
+    getIndex(index: number) {
+        const length = this.items.length;
+        return index > length ? (index % length): index;
+    }
+    find(index: number) {
+        return !this.isEmpty() ? this.items[this.getIndex(index)]: undefined;
+    }
+    isEmpty() {
+        return Object.is(this.size(), 0);
+    }
+    size():number {
+        return this.items.length;
+    }
+    clear(): void {
+        this.items = [];
     }
 }

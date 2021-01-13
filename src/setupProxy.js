@@ -12,5 +12,3 @@ module.exports = function(app){
         })
     )
 };
-
-console.log('测试')
