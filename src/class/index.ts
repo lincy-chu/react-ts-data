@@ -1,5 +1,6 @@
 import {Component, FC} from "react";
 import {Meta, RouteItem,} from "../interface";
+import {Compare, defaultCompare} from "../utils";
 
 export class RouterItem implements RouteItem {
     component: Component | FC;
@@ -800,5 +801,64 @@ export class HashTableEnhance extends HashTable {
             }
         }
         return false;
+    }
+}
+
+/**
+ * 二叉搜索树
+ */
+class BSTNode<T> {
+    key: T;
+    left: BSTNode<T> | null;
+    right: BSTNode<T> | null;
+    constructor(key: T) {
+        this.key = key;
+        this.left = null;
+        this.right = null;
+    }
+}
+export class BinarySearchTree<T> {
+    root: BSTNode<T> | null;
+    constructor() {
+        this.root = null;
+    }
+    // 向树中插入一个新的键
+    insert(key: T) {
+        if(this.root === null) {
+            this.root = new BSTNode<T>(key);
+        } else {
+            this.insertNode(this.root, key);
+        }
+    }
+    insertNode(node: BSTNode<T>, key: T) {
+
+    }
+    // 在树中查找一个键。如果节点存在，则返回true；如果不存在，则返回false
+    search(key: T) {
+
+    }
+    // 通过中序遍历方式遍历所有节点
+    inOrderTraverse() {
+
+    }
+    // 通过先序遍历方式遍历所有节点
+    preOrderTraverse() {
+
+    }
+    // 通过后序遍历方式遍历所有节点
+    postOrderTraverse() {
+
+    }
+    // 返回树中的最小值
+    min() {
+
+    }
+    // 返回树中的最大值
+    max() {
+
+    }
+    // 从树中移除某个键
+    remove(key: T) {
+
     }
 }

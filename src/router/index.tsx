@@ -13,6 +13,7 @@ import Queues from "../views/queue";
 import LinkedLists from "../views/linkedList";
 import Sets from "../views/set";
 import TheDictionary from "../views/dictionary";
+import Trees from "../views/tree";
 
 export const routes: RouteItem[] = [
     new RouterItem('/', ArrAndRecursion, new MetaItem('数组和递归')),
@@ -21,6 +22,7 @@ export const routes: RouteItem[] = [
     new RouterItem('/linkedList', LinkedLists, new MetaItem('链表')),
     new RouterItem('/set', Sets, new MetaItem('集合')),
     new RouterItem('/dictionary', TheDictionary, new MetaItem('字典')),
+    new RouterItem('/tress', Trees, new MetaItem('树')),
 ];
 
 export default function Routers() {
