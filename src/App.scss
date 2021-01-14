@@ -6,11 +6,10 @@
   background: #ffffff;
   .link{
     display: inline-block;
-    margin-right: 20px;
     color: #38f;
     text-decoration: none;
-    &:last-child{
-      margin-right: 0;
+    & + .link{
+      margin-left: 20px;
     }
   }
 }

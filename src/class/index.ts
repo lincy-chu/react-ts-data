@@ -532,18 +532,272 @@ export class DoubleNode<T> {
  * 双向链表
  */
 export class DoubleLinkedList<T> {
-    head: DoubleNode<T> | null;
-    tail: DoubleNode<T> | null;
-    length: number;
+    head: DoubleNode<T> | null; // 头指针
+    tail: DoubleNode<T> | null; // 尾指针
+    length: number; // 链表长度
     constructor() {
         this.head = null;
         this.tail = null;
         this.length = 0;
     }
+    // 追加元素
+    append(...elements: T[]): void {
+        elements.forEach((element: T) => {
+            let node = new DoubleNode<T>(element);
+            if (this.head === null) {
+                this.head = node;
+                this.tail = node;
+            } else {
+                this.tail && (this.tail.next = node);
+                node.prev = this.tail;
+                this.tail = node;
+            }
+            this.length++;
+        });
+    }
     // 任意位置插入元素
     insert(position: number, element: T): boolean {
         if(position >= 0 && position <= this.length) {
 
+        }
+        return false;
+    }
+    // 移除指定位置的元素
+    removeAt(position: number) {
+
+    }
+    // 移除指定元素
+    remove(element: T) {
+
+    }
+    // 获取最后一个节点
+    lastNode() {
+        let last = this.head;
+        while (this.head?.next) {
+            last = this.head.next;
+        }
+        return last;
+    }
+    getHead() {
+
+    }
+    isEmpty() {
+
+    }
+    size() {
+
+    }
+    toString() {
+
+    }
+}
+
+/**
+ * 集合
+ * 并集：对于给定的两个或多个集合，返回一个包含所有给定集合中所有元素的新集合
+ * 交集：对于给定的两个或多个集合，返回一个包含所有给定集合中所有共有元素的新集合
+ * 差集：对于给定的两个集合，返回一个包含所有存在于第一个集合且不存在于第二个集合的元素的新集合
+ * 子集：求证一个给定集合中的元素是否全部包含于另一个集合
+ */
+export class Set {
+    items: any;
+    constructor(...elements: any[]) {
+        this.items = {};
+        elements.forEach((element: any) => {
+            this.add(element);
+        });
+    }
+    has(value: any): boolean {
+        return this.items.hasOwnProperty(value);
+    }
+    add(value: any): boolean {
+        if (!this.has(value)) {
+            this.items[value] = value;
+            return true;
+        }
+        return false;
+    }
+    addByGroup(...elements: any[]) { // 批量添加
+        elements.forEach((element: any) => {
+            this.add(element);
+        });
+    }
+    remove(value: any) {
+        if (this.has(value)) {
+            delete this.items[value];
+            return true;
+        }
+        return false;
+    }
+    // 合集
+    union(...otherSets: Set[]): Set {
+        const unionSet = new Set();
+        const values = this.values();
+        const handle = (values: Array<any>, set: Set) => {
+            values.forEach((val: any, index: number) => {
+                set.add(values[index]);
+            });
+        };
+        handle(values, unionSet);
+        otherSets.forEach((otherSet: Set) => {
+            const values = otherSet.values();
+            handle(values, unionSet);
+        });
+        return unionSet;
+    }
+    // 交集
+    intersection(...otherSets: Array<Set>): Set {
+        const intersection = new Set();
+        let othersValues: any = this.values().filter((element: any) => otherSets.every((set: Set) => set.values().includes(element)));
+        intersection.addByGroup(...othersValues);
+        return intersection;
+    }
+    // 差集
+    difference(otherSet: Set): Set {
+        const difference = new Set();
+        const values = this.values().filter((element: any) => !otherSet.values().includes(element));
+        difference.addByGroup(...values);
+        return difference;
+    }
+    // 子集
+    subset(otherSet: Set): boolean {
+        if (this.size() > otherSet.size()) return false
+        return this.values().every((element: any) => otherSet.has(element));
+    }
+    size(): number {
+        return Object.keys(this.items).length;
+    }
+    values(): Array<any> {
+        return Object.keys(this.items);
+    }
+}
+
+/**
+ * 字典
+ */
+export class Dictionary {
+    items: any;
+    constructor() {
+        this.items = {};
+    }
+    set(key: string, value: any): void {
+        this.items[key] = value;
+    }
+    get(key: string): any {
+        return this.items[key];
+    }
+    hasKey(key: string): boolean {
+        return this.keys().includes(key);
+    }
+    remove(key: string): boolean {
+        if(this.hasKey(key)) {
+            delete this.items[key];
+            return true;
+        }
+        return false;
+    }
+    isEmpty(): boolean {
+        return Object.is(Object.keys(this.items).length, 0);
+    }
+    size(): number {
+        return Object.keys(this.items).length;
+    }
+    keys(): string[] {
+        return Object.keys(this.items);
+    }
+    values(): Array<any> {
+        return Object.values(this.items);
+    }
+    clear(): void {
+        this.items = {};
+    }
+}
+
+/**
+ * 散列表
+ * 散列表中有时可能会出现相同的散列值，导致最终的数据对象中，只有最后一次被添加/修改的数据会覆盖原本数据，进而生效。
+ * 使用一个数据结构来保存数据的目的显然不是去丢失这些数据，而是通过某些方法将它们全部保存起来；处理冲突的方法有：1.分离链接 2.线性探索 3.双散列法。
+ */
+export class HashTable {
+    table: any[];
+    constructor() {
+        this.table = [];
+    }
+    // 散列函数
+    static loseHashCode(key: string, better: boolean = true): number {
+        if (better) {
+            let hash = 5381;
+            for (let i = 0; i < key.length; i++) {
+                hash = hash * 33 + key.charCodeAt(i);
+            }
+            return hash % 1013;
+        }
+        else {
+            let hash = 0;
+            for (let i = 0; i < key.length; i++) {
+                hash += key.charCodeAt(i);
+            }
+            return hash % 37;
+        }
+    }
+    // 修改和增加元素
+    put(key: string, value: any): void {
+        const position = HashTable.loseHashCode(key);
+        console.log(`${position} - ${key}`);
+        this.table[position] = value;
+    }
+    // 通过key获取值
+    get(key: string): any {
+        return this.table[HashTable.loseHashCode(key)];
+    }
+    // 通过键值删除值
+    remove(key: string): any {
+        this.table[HashTable.loseHashCode(key)] = undefined;
+    }
+}
+
+/**
+ * 增强版散列值
+ */
+export class HashTableEnhance extends HashTable {
+    put(key: string, value: any): void {
+        const position = HashTableEnhance.loseHashCode(key, false);
+        if (this.table[position] === undefined) {
+            this.table[position] = new LinkedList();
+        }
+        this.table[position].append({ key, value });
+    }
+    get(key: string): any {
+        const position = HashTableEnhance.loseHashCode(key, false);
+        const linkedList = this.table[position];
+        if (linkedList !== null && !linkedList.isEmpty()) {
+            let current = linkedList.getHead();
+            while (current !== null) {
+                const { key: theKey, value } = current.element;
+                if(theKey === key) {
+                    return value;
+                }
+                current = current.next;
+            }
+        }
+        return undefined;
+    }
+    remove(key: string): boolean {
+        const position = HashTableEnhance.loseHashCode(key, false);
+        const linkedList = this.table[position];
+        if (linkedList !== null && !linkedList.isEmpty()) {
+            let current = linkedList.getHead();
+            while (current !== null) {
+                const { key: theKey } = current.element;
+                if (theKey === key) {
+                    linkedList.remove(current.element);
+                    if (linkedList.isEmpty()) {
+                        delete this.table[position];
+                    }
+                    return true;
+                }
+                current = current.next;
+            }
         }
         return false;
     }
