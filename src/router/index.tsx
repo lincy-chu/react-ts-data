@@ -14,6 +14,7 @@ import LinkedLists from "../views/linkedList";
 import Sets from "../views/set";
 import TheDictionary from "../views/dictionary";
 import Trees from "../views/tree";
+import Graphs from "../views/graph";
 
 export const routes: RouteItem[] = [
     new RouterItem('/', ArrAndRecursion, new MetaItem('数组和递归')),
@@ -23,6 +24,7 @@ export const routes: RouteItem[] = [
     new RouterItem('/set', Sets, new MetaItem('集合')),
     new RouterItem('/dictionary', TheDictionary, new MetaItem('字典')),
     new RouterItem('/tress', Trees, new MetaItem('树')),
+    new RouterItem('/graph', Graphs, new MetaItem('图')),
 ];
 
 export default function Routers() {

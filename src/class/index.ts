@@ -819,46 +819,181 @@ class BSTNode<T> {
 }
 export class BinarySearchTree<T> {
     root: BSTNode<T> | null;
+    compareFn: Function;
     constructor() {
         this.root = null;
+        this.compareFn = defaultCompare;
     }
     // 向树中插入一个新的键
-    insert(key: T) {
-        if(this.root === null) {
-            this.root = new BSTNode<T>(key);
-        } else {
-            this.insertNode(this.root, key);
-        }
-    }
-    insertNode(node: BSTNode<T>, key: T) {
-
+    insert(...keys: T[]) {
+        keys.forEach((key: T) => {
+            const newNode = new BSTNode<T>(key);
+            const insertNode = (node: BSTNode<T>, newNode: BSTNode<T>) => {
+                if (newNode.key < node.key) {
+                    if (node.left === null) {
+                        node.left = newNode;
+                    } else {
+                        insertNode(node.left, newNode);
+                    }
+                } else {
+                    if (node.right === null) {
+                        node.right = newNode;
+                    } else {
+                        insertNode(node.right, newNode);
+                    }
+                }
+            }
+            if (!this.root) {
+                this.root = newNode;
+            } else {
+                insertNode(this.root, newNode);
+            }
+        });
     }
     // 在树中查找一个键。如果节点存在，则返回true；如果不存在，则返回false
     search(key: T) {
-
+        const searchNode = (node: BSTNode<T> | null, key: T): boolean => {
+            if (node === null) {
+                return false;
+            } else {
+                if (this.compareFn(key, node.key) === Compare.LESS_THAN) {
+                    return searchNode(node.left, key);
+                } else if(this.compareFn(key, node.key) === Compare.BIGGER_THAN) {
+                    return searchNode(node.right, key);
+                } else {
+                    return true;
+                }
+            }
+        };
+        return searchNode(this.root, key);
     }
-    // 通过中序遍历方式遍历所有节点
-    inOrderTraverse() {
-
+    /*
+       先序遍历是以优先后代节点的顺序访问每个节点的
+       遍历顺序：节点本身 -> 左节点 -> 右节点
+     */
+    preOrderTraverse(callback: Function) {
+        this.preOrderTraverseNode(this.root, callback);
     }
-    // 通过先序遍历方式遍历所有节点
-    preOrderTraverse() {
-
+    preOrderTraverseNode(node: BSTNode<T> | null, callback: Function) {
+        if (node !== null) {
+            callback(node.key);
+            this.preOrderTraverseNode(node.left, callback);
+            this.preOrderTraverseNode(node.right, callback);
+        }
+    };
+    /*
+       中序遍历是一种以上行顺序访问BST所有节点的遍历方式，也就是以从最小到最大的顺序访问所有节点
+       遍历顺序：左节点 -> 节点本身 -> 右节点
+     */
+    inOrderTraverse(callback: Function) {
+        this.inOrderTraverseNode(this.root, callback);
     }
-    // 通过后序遍历方式遍历所有节点
-    postOrderTraverse() {
-
+    inOrderTraverseNode(node: BSTNode<T> | null, callback: Function) {
+        if (node !== null) {
+            this.inOrderTraverseNode(node.left, callback);
+            callback(node.key);
+            this.inOrderTraverseNode(node.right, callback);
+        }
+    }
+    /*
+       后序遍历则是先访问节点的后代节点，再访问节点本身
+       遍历顺序：左节点 -> 节点本身 -> 右节点
+     */
+    postOrderTraverse(callback: Function) {
+        this.postOrderTraverseNode(this.root, callback);
+    }
+    postOrderTraverseNode(node: BSTNode<T> | null, callback: Function) {
+        if (node !== null) {
+            this.postOrderTraverseNode(node.left, callback);
+            this.postOrderTraverseNode(node.right, callback);
+            callback(node.key);
+        }
     }
     // 返回树中的最小值
-    min() {
-
+    min(): BSTNode<T> | null {
+        return this.minNode(this.root);
+    }
+    minNode(node: BSTNode<T> | null): BSTNode<T> | null {
+        return node ? (node.left ? this.minNode(node.left): node): null;
     }
     // 返回树中的最大值
-    max() {
-
+    max(): BSTNode<T> | null {
+        return this.maxNode(this.root);
+    }
+    maxNode(node: BSTNode<T> | null): BSTNode<T> | null {
+        return node ? (node.right ? this.maxNode(node.right): node) : null;
     }
     // 从树中移除某个键
-    remove(key: T) {
+    remove(key: any) {
+        return this.removeNode(this.root, key);
+    }
+    removeNode(node: BSTNode<T> | null, key: any): any {
+        if (node == null) {
+            return null;
+        }
+        if (this.compareFn(key, node.key) === Compare.LESS_THAN) {
+            node.left = this.removeNode(node.left, key);
+            return node;
+        } else if (this.compareFn(key, node.key) === Compare.BIGGER_THAN) {
+            node.right = this.removeNode(node.right, key);
+            return node;
+        } else {
+            // 键等于node.key
+            // 第一种情况
+            if (node.left == null && node.right == null) {
+                node = null;
+                return node;
+            }
+            // 第二种情况
+            if (node.left == null) {
+                node = node.right;
+                return node;
+            } else if (node.right == null) {
+                node = node.left;
+                return node;
+            }
+            // 第三种情况
+            const aux = this.minNode(node.right);
+            aux && (node.key = aux.key);
+            aux && (node.right = this.removeNode(node.right, aux.key));
+            return node;
+        }
+    }
+}
 
+/**
+ * 图
+ */
+export class Graph<T> {
+    vertices: T[];
+    adjList: Dictionary;
+    constructor() {
+        this.vertices = [];
+        this.adjList = new Dictionary();
+    }
+    // 添加顶点
+    addVertex(...v: T[]) {
+        v.forEach((ele: T) => {
+            this.vertices.push(ele);
+            this.adjList.set(String(ele), []);
+        });
+    }
+    // 添加线
+    addEdge(v: T, w: T) {
+        this.adjList.get(`${v}`).push(w);
+        this.adjList.get(`${w}`).push(v);
+    }
+    // 转为字符串
+    toString() {
+        let s = '';
+        for (let i = 0; i < this.vertices.length; i++) { // {15}
+            s += `${this.vertices[i]} -> `;
+            const neighbors = this.adjList.get(`${this.vertices[i]}`); // {16}
+            for (let j = 0; j < neighbors.length; j++) { // {17}
+                s += `${neighbors[j]} `;
+            }
+            s += '\n'; // {18}
+        }
+        return s;
     }
 }
