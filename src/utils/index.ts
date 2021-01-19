@@ -1,3 +1,9 @@
+/**
+ * 分组输出日志
+ * @param title
+ * @param cb
+ * @constructor
+ */
 export const LogStart = (title: string, cb: any = () => {}) => {
     console.group(title);
     cb();

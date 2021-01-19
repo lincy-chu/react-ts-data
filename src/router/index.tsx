@@ -15,6 +15,7 @@ import Sets from "../views/set";
 import TheDictionary from "../views/dictionary";
 import Trees from "../views/tree";
 import Graphs from "../views/graph";
+import SortAndSearch from "../views/sortAndSearch";
 
 export const routes: RouteItem[] = [
     new RouterItem('/', ArrAndRecursion, new MetaItem('数组和递归')),
@@ -25,6 +26,7 @@ export const routes: RouteItem[] = [
     new RouterItem('/dictionary', TheDictionary, new MetaItem('字典')),
     new RouterItem('/tress', Trees, new MetaItem('树')),
     new RouterItem('/graph', Graphs, new MetaItem('图')),
+    new RouterItem('/sortAndSearch', SortAndSearch, new MetaItem('排序和搜索算法')),
 ];
 
 export default function Routers() {

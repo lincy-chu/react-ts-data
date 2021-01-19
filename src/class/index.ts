@@ -997,3 +997,22 @@ export class Graph<T> {
         return s;
     }
 }
+
+// eslint-disable-next-line no-extend-native
+Array.prototype.selectSort = function() {
+    let indexMin;
+    for (let i = 0; i < this.length - 1; i++) {
+        indexMin = i;
+        for (let j = i; j < this.length; j++) {
+            if (this[indexMin] > this[j]) {
+                indexMin = j;
+            }
+        }
+        if (indexMin !== i) {
+            let aux = this[i];
+            this[i] = this[indexMin];
+            this[indexMin] = aux;
+        }
+    }
+    return this;
+}
