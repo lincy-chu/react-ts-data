@@ -1016,3 +1016,14 @@ Array.prototype.selectSort = function() {
     }
     return this;
 }
+
+/**
+ * 自平衡树
+ */
+export class AVLTree<T> extends BinarySearchTree<T> {
+    constructor(compareFn = defaultCompare) {
+        super();
+        this.compareFn = compareFn;
+        this.root = null;
+    }
+}
